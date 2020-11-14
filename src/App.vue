@@ -1,5 +1,7 @@
 <template>
-  <div id="app"></div>
+  <div id="app">
+    <router-view />
+  </div>
 </template>
 
 <style lang="scss">
@@ -13,8 +15,13 @@ $basic-color: #333;
   box-sizing: border-box;
   font-family: "Roboto Mono", monospace;
   color: $basic-color;
+  font-size: 16px;
+  font-weight: 400;
 }
 #app {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-image: url("assets/bg.svg");
   height: 100vh;
 }
