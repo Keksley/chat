@@ -1,23 +1,22 @@
 <template>
   <div class="login">
     <h2>Представимся</h2>
-    <form>
-      <div class="login__control">
-        <label for="nickname">Ник</label>
+    <form @submit.prevent="handleSubmit($event)">
+      <div
+        class="login__control"
+        v-for="control of controls"
+        :key="control.name"
+      >
+        <div class="login__invalid-message" v-if="!control.valid">
+          {{ control.invalidMessage }}
+        </div>
+        <label :for="control.name">{{ control.label }}</label>
         <input
           type="text"
-          name="nickname"
-          id="nickname"
-          placeholder="Никнейм"
-        />
-      </div>
-      <div class="login__control">
-        <label for="avatar-link">Ссылка на аватар</label>
-        <input
-          type="text"
-          name="avatar-link"
-          id="avatar-link"
-          placeholder="Вставьте ссылку на изображение"
+          :name="control.name"
+          :id="control.name"
+          :placeholder="control.placeholder"
+          @change="handleInput($event, control)"
         />
       </div>
       <button type="submit">
@@ -47,6 +46,15 @@
     min-height: 4rem;
     justify-content: space-between;
     margin-bottom: 2rem;
+    position: relative;
+  }
+
+  &__invalid-message {
+    position: absolute;
+    color: rgb(255, 92, 92);
+    font-size: 0.75rem;
+    font-weight: 700;
+    bottom: -15px;
   }
 
   h2 {
@@ -126,3 +134,67 @@
   }
 }
 </style>
+
+<script lang="ts">
+import { Control } from "@/models/control";
+import { Component, Vue } from "vue-property-decorator";
+
+@Component
+export default class Login extends Vue {
+  public controls = [
+    {
+      name: "nick",
+      label: "Никнейм",
+      placeholder: "Введите никнейм",
+      valid: false,
+      value: "",
+      needValidate: true,
+      invalidMessage: "",
+      validators: [
+        (control: Control): boolean => {
+          const minLength = 3;
+          const isValid = control.value.length > minLength;
+          if (!isValid) {
+            control.invalidMessage = "Нужно больше букв";
+          }
+          return isValid;
+        }
+      ]
+    },
+    {
+      name: "avatar-image",
+      label: "Аватар",
+      placeholder: "Вставьте ссылку на изображение",
+      needValidate: false,
+      valid: true,
+      value: ""
+    }
+  ];
+
+  public handleSubmit() {
+    this.$emit("");
+  }
+
+  public handleInput(event: any, curControl: Control) {
+    this.controls = this.controls.map(control => {
+      if (control !== curControl) {
+        return control;
+      }
+
+      control.value = event.target.value;
+      this.validate(control);
+
+      return control;
+    });
+  }
+
+  private validate(control: Control) {
+    if (!control.needValidate) {
+      return;
+    }
+
+    // Вернёт true если все валидаторы вернут true
+    control.valid = control.validators.every(validator => validator(control));
+  }
+}
+</script>
