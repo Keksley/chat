@@ -137,11 +137,13 @@
 
 <script lang="ts">
 import { Control } from "@/models/control";
+import router from "@/router";
+import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class Login extends Vue {
-  public controls = [
+  public controls: Control[] = [
     {
       name: "nick",
       label: "Никнейм",
@@ -171,8 +173,16 @@ export default class Login extends Vue {
     }
   ];
 
+  public isFormValid() {
+    return this.controls.every((control: Control) => this.validate(control));
+  }
+
   public handleSubmit() {
-    this.$emit("");
+    if (this.isFormValid()) {
+      // store.commit('loggedIn', this.controls.map(control => ({[control.name]: control.value})));
+      router.push({ path: "messages" });
+    }
+    // this.$emit();
   }
 
   public handleInput(event: any, curControl: Control) {
@@ -182,19 +192,22 @@ export default class Login extends Vue {
       }
 
       control.value = event.target.value;
-      this.validate(control);
+      control.valid = this.validate(control);
 
       return control;
     });
   }
 
-  private validate(control: Control) {
+  private validate(control: Control): boolean {
     if (!control.needValidate) {
-      return;
+      return true;
     }
 
     // Вернёт true если все валидаторы вернут true
-    control.valid = control.validators.every(validator => validator(control));
+    control.valid = (control &&
+      control.validators &&
+      control.validators.every(validator => validator(control))) as boolean;
+    return control.valid;
   }
 }
 </script>
