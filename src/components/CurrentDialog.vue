@@ -1,25 +1,34 @@
 <template>
-  <div class="curent-dialog">
+  <div class="current-dialog">
     <div class="current-dialog__list" v-if="messages.length">
       <div
         class="message"
         v-for="msg of messages"
-        :key="msg.text"
+        :key="msg.id"
         :class="getMessageClass(msg)"
       >
         <div
           class="message__avatar"
           :style="`background-image: url(${msg.user.avatarLink})`"
         ></div>
-        <div class="message__text">{{ msg.text }}</div>
+        <div class="message__text">
+          <span> {{ msg.user.name }} {{ msg.time }} </span>
+          <p>{{ msg.text }}</p>
+        </div>
       </div>
     </div>
     <div class="empty" v-else>
       Список сообщений пуст
     </div>
     <div class="new-message">
-      <textarea name="new" id="new" rows="2"></textarea>
-      <button class="new-message__send">
+      <textarea
+        name="new"
+        id="new"
+        rows="2"
+        v-model="newMessageText"
+        @keypress.enter.exact.prevent="send()"
+      ></textarea>
+      <button class="new-message__send" @click="send()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           height="32"
@@ -42,20 +51,55 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class CurrentDialog extends Vue {
-  @Prop() messages!: Message[];
-  @Prop() currentUser!: User;
+  @Prop() public dialog!: Dialog;
+  @Prop() public currentUser!: User;
+  public newMessageText = "";
 
-  getMessageClass(message: Message) {
+  public get messages() {
+    return this.dialog.messages;
+  }
+
+  public getMessageClass(message: Message) {
     return this.currentUser.id === message.user.id ? "current" : "";
+  }
+
+  public send() {
+    if (this.newMessageText === "") {
+      return;
+    }
+    const now = new Date().toString().slice(16, 21);
+    const newMsg = {
+      user: this.currentUser,
+      text: this.newMessageText,
+      time: now,
+      id: this.dialog.messages.length
+    };
+    this.dialog.messages.push(newMsg);
+
+    this.newMessageText = "";
   }
 }
 </script>
 
 <style scoped lang="scss">
-.new-message {
-  position: absolute;
-  bottom: 0;
+.current-dialog {
   display: flex;
+  flex-direction: column;
+  padding-top: 4rem;
+  position: relative;
+  height: 100%;
+  max-height: 100vh;
+
+  &__list {
+    width: 100%;
+    height: calc(100% - 110px);
+    overflow: auto;
+  }
+}
+
+.new-message {
+  display: flex;
+  height: 110px;
   width: 100%;
   padding: 1rem 20%;
 
@@ -87,19 +131,6 @@ export default class CurrentDialog extends Vue {
   }
 }
 
-.curent-dialog {
-  display: flex;
-  flex-direction: column;
-  padding-top: 4rem;
-  position: relative;
-  height: 100%;
-
-  &__list {
-    width: 100%;
-    height: 100%;
-  }
-}
-
 .message {
   padding: 1rem;
   display: flex;
@@ -110,15 +141,28 @@ export default class CurrentDialog extends Vue {
 
   &.current &__text {
     background-color: rgb(210, 248, 239);
+    display: flex;
+    flex-direction: column;
   }
 
   &__text {
     background-color: #fff;
-    box-shadow: 2px 2px 12px #333;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.25);
     min-height: 70px;
     border-radius: 20px;
     padding: 1rem;
     margin: 0 1rem;
+    max-width: 50%;
+
+    span {
+      color: #444;
+      font-size: 0.75rem;
+    }
+
+    p {
+      padding-top: 1rem;
+      word-wrap: wrap;
+    }
   }
 
   &__avatar {

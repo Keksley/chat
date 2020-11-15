@@ -52,9 +52,10 @@
     display: flex;
     align-items: center;
     border-radius: 3px 0 0 3px;
+    opacity: 0.5;
 
     &:hover {
-      background-color: #444;
+      opacity: 1;
     }
 
     svg path:last-child {

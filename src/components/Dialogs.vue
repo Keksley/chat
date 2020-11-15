@@ -16,11 +16,7 @@
       </div>
     </div>
     <div class="dialogs__current">
-      <CurrentDialog
-        :messages="curDialog.messages"
-        v-if="curDialog"
-        :currentUser="user"
-      />
+      <CurrentDialog :dialog="curDialog" v-if="curDialog" :currentUser="user" />
       <div class="empty" v-else>
         Выберите с кем общаться
       </div>
@@ -112,7 +108,7 @@ export default class Dialogs extends Vue {
     min-width: 320px;
     min-height: 70px;
     background-color: #fff;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid #888;
     cursor: pointer;
 
     &.active {

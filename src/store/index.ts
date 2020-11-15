@@ -2,6 +2,7 @@ import { User } from "@/models/user";
 import { Dialog } from "@/models/dialog";
 import Vue from "vue";
 import Vuex from "vuex";
+import { Message } from "@/models/message";
 
 Vue.use(Vuex);
 
@@ -13,11 +14,15 @@ const mockUser: User = {
   id: 1
 };
 
+const now = new Date().toString().slice(16, 21);
+
 const mockDialog: Dialog = {
   messages: [
     {
       user: mockUser,
-      text: "хай, давно тебя здесь не видел"
+      text: "хай, давно тебя здесь не видел",
+      time: now,
+      id: 0
     }
   ],
   users: [mockUser]
@@ -48,7 +53,5 @@ export default new Vuex.Store({
         users: [state.currentUser]
       });
     }
-  },
-  actions: {},
-  modules: {}
+  }
 });
