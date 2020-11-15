@@ -5,6 +5,8 @@
         class="dialogs__dialog-card"
         v-for="dialog of user.dialogs"
         :key="dialog.name"
+        @click="curDialog = dialog"
+        :class="curDialog === dialog ? 'active' : ''"
       >
         <div
           class="dialogs__avatar"
@@ -13,7 +15,16 @@
         {{ getDialogName(dialog, user) }}
       </div>
     </div>
-    <div class="dialogs__current"></div>
+    <div class="dialogs__current">
+      <CurrentDialog
+        :messages="curDialog.messages"
+        v-if="curDialog"
+        :currentUser="user"
+      />
+      <div class="empty" v-else>
+        Выберите с кем общаться
+      </div>
+    </div>
   </div>
 </template>
 
@@ -21,13 +32,21 @@
 import { Dialog } from "@/models/dialog";
 import { User } from "@/models/user";
 import { Component, Prop, Vue } from "vue-property-decorator";
+import CurrentDialog from "./CurrentDialog.vue";
 
-@Component
+@Component({
+  components: {
+    CurrentDialog
+  }
+})
 export default class Dialogs extends Vue {
+  public curDialog!: Dialog | null;
+
   @Prop() private user!: User;
 
   constructor() {
     super();
+    this.curDialog = null;
   }
 
   public getAvatarUrl(dialog: Dialog, curUser: User) {
@@ -56,10 +75,25 @@ export default class Dialogs extends Vue {
 </script>
 
 <style scoped lang="scss">
+.empty {
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #888;
+}
+
 .dialogs {
   display: flex;
   height: 100vh;
   width: 100%;
+
+  &__current {
+    width: 100%;
+  }
 
   &__list {
     height: 100%;
@@ -78,8 +112,13 @@ export default class Dialogs extends Vue {
     min-width: 320px;
     min-height: 70px;
     background-color: #fff;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.25);
+    border-bottom: 1px solid #333;
     cursor: pointer;
+
+    &.active {
+      background-color: #333;
+      color: #fff;
+    }
   }
 
   &__avatar {
