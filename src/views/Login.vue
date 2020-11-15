@@ -178,20 +178,25 @@ export default class Login extends Vue {
   }
 
   public handleSubmit() {
+    const nameIndex = 0;
+    const avatarIndex = 1;
     if (this.isFormValid()) {
-      // store.commit('loggedIn', this.controls.map(control => ({[control.name]: control.value})));
+      store.commit("login", {
+        name: this.controls[nameIndex].value,
+        avatarLink: this.controls[avatarIndex].value
+      });
       router.push({ path: "messages" });
     }
-    // this.$emit();
+    this.$emit("login");
   }
 
-  public handleInput(event: any, curControl: Control) {
-    this.controls = this.controls.map(control => {
+  public handleInput(event: InputEvent, curControl: Control) {
+    this.controls = this.controls.map((control: Control) => {
       if (control !== curControl) {
         return control;
       }
 
-      control.value = event.target.value;
+      control.value = (event.target as any).value;
       control.valid = this.validate(control);
 
       return control;
