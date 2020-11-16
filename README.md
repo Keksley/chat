@@ -1,24 +1,23 @@
 # junior-project
 
-## Project setup
+## Последняя версия приложения https://junior-project-chat.onrender.com/
+
+## Установка
 ```
-npm install
+npm i
 ```
 
-### Compiles and hot-reloads for development
+### Сборка с hot-reloading для разработки
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Прод сборка
 ```
 npm run build
 ```
 
-### Lints and fixes files
+### Линтинг
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
