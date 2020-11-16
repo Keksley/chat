@@ -14,17 +14,8 @@ const mockUser: User = {
   id: 1
 };
 
-const now = new Date().toString().slice(16, 21);
-
 const mockDialog: Dialog = {
-  messages: [
-    {
-      user: mockUser,
-      text: "хай, давно тебя здесь не видел",
-      time: now,
-      id: 0
-    }
-  ],
+  messages: [],
   users: [mockUser]
 };
 
