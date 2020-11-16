@@ -7,6 +7,7 @@
       <button
         class="messages__hide-btn"
         @click="hiddenAdditional = !hiddenAdditional"
+        :class="hiddenAdditional ? 'hidden' : ''"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -69,6 +70,19 @@
 
     &.hidden {
       width: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 1440px) {
+  .messages {
+    flex-wrap: wrap;
+    &__additional,
+    &__main {
+      width: 100%;
+    }
+    &__hide-btn {
+      opacity: 0;
     }
   }
 }

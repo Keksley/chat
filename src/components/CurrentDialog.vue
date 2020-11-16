@@ -85,9 +85,9 @@ export default class CurrentDialog extends Vue {
 .current-dialog {
   display: flex;
   flex-direction: column;
-  padding-top: 4rem;
+  margin-top: 4rem;
   position: relative;
-  height: 100%;
+  height: calc(100% - 4rem);
   max-height: 100vh;
 
   &__list {
@@ -101,7 +101,7 @@ export default class CurrentDialog extends Vue {
   display: flex;
   height: 110px;
   width: 100%;
-  padding: 1rem 20%;
+  padding: 1rem 5%;
 
   textarea {
     resize: none;
@@ -111,6 +111,7 @@ export default class CurrentDialog extends Vue {
     outline: none;
     border: 1px solid #888;
     padding: 1rem;
+    min-width: 240px;
   }
 
   &__send {
@@ -153,6 +154,7 @@ export default class CurrentDialog extends Vue {
     padding: 1rem;
     margin: 0 1rem;
     max-width: 50%;
+    min-width: 240px;
 
     span {
       color: #444;

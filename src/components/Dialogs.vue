@@ -1,11 +1,22 @@
 <template>
   <div class="dialogs">
-    <div class="dialogs__list" v-if="user">
+    <button class="dialogs__show-btn" @click="showDialog = !showDialog">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24"
+        viewBox="0 0 24 24"
+        width="24"
+      >
+        <path d="M0 0h24v24H0z" fill="none" />
+        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+      </svg>
+    </button>
+    <div class="dialogs__list" v-if="user" :class="dialogsClassName">
       <div
         class="dialogs__dialog-card"
         v-for="dialog of user.dialogs"
         :key="dialog.name"
-        @click="curDialog = dialog"
+        @click="openDialog(dialog)"
         :class="curDialog === dialog ? 'active' : ''"
       >
         <div
@@ -15,7 +26,7 @@
         {{ getDialogName(dialog, user) }}
       </div>
     </div>
-    <div class="dialogs__current">
+    <div class="dialogs__current" :class="currentDialogClassName">
       <CurrentDialog :dialog="curDialog" v-if="curDialog" :currentUser="user" />
       <div class="empty" v-else>
         Выберите с кем общаться
@@ -39,10 +50,24 @@ export default class Dialogs extends Vue {
   public curDialog!: Dialog | null;
 
   @Prop() private user!: User;
+  public showDialog = true;
 
   constructor() {
     super();
     this.curDialog = null;
+  }
+
+  public get currentDialogClassName() {
+    return this.showDialog ? "collapsed" : "visible";
+  }
+
+  public get dialogsClassName() {
+    return this.showDialog ? "visible" : "collapsed";
+  }
+
+  public openDialog(dialog: Dialog) {
+    this.showDialog = false;
+    this.curDialog = dialog;
   }
 
   public getAvatarUrl(dialog: Dialog, curUser: User) {
@@ -86,6 +111,31 @@ export default class Dialogs extends Vue {
   display: flex;
   height: 100vh;
   width: 100%;
+  position: relative;
+
+  &__show-btn {
+    display: none;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    cursor: pointer;
+
+    svg {
+      width: 32px;
+      height: 32px;
+
+      path:last-child {
+        fill: #333;
+
+        &:hover {
+          fill: #444;
+        }
+      }
+    }
+  }
 
   &__current {
     width: 100%;
@@ -124,6 +174,20 @@ export default class Dialogs extends Vue {
     background-size: cover;
     border-radius: 40px;
     margin-right: 1rem;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .dialogs__show-btn {
+    display: block;
+  }
+
+  .visible {
+    width: 100%;
+  }
+
+  .collapsed {
+    display: none;
   }
 }
 </style>
