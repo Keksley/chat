@@ -2,7 +2,6 @@ import { User } from "@/models/user";
 import { Dialog } from "@/models/dialog";
 import Vue from "vue";
 import Vuex from "vuex";
-import { Message } from "@/models/message";
 
 Vue.use(Vuex);
 
@@ -34,15 +33,17 @@ export default new Vuex.Store({
   },
   mutations: {
     login(state, user: User) {
+      if (!state.currentUser.name.length) {
+        state.currentUser.dialogs.push({
+          messages: [],
+          users: [state.currentUser]
+        });
+      }
       state.currentUser.name = user.name;
       state.currentUser.avatarLink = user.avatarLink
         ? user.avatarLink
         : "https://i.pinimg.com/564x/39/b2/a6/39b2a66a178a99028c194e204b1e2402.jpg";
       mockDialog.users.push(state.currentUser);
-      state.currentUser.dialogs.push({
-        messages: [],
-        users: [state.currentUser]
-      });
     }
   }
 });
