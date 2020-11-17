@@ -126,6 +126,7 @@
     width: 100%;
     height: 100vh;
     min-width: 100%;
+    border-radius: 5px;
 
     form {
       height: 85%;
