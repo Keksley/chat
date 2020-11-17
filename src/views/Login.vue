@@ -40,6 +40,14 @@
 
 <style lang="scss" scoped>
 .login {
+  border-radius: 5px;
+  font-size: 1.5rem;
+  background-color: #fff;
+  min-width: 500px;
+  padding: 2rem;
+  min-height: 300px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  
   &__control {
     display: flex;
     flex-direction: column;
@@ -62,13 +70,6 @@
     margin: 0 auto 3rem;
     font-size: 2rem;
   }
-
-  font-size: 1.5rem;
-  background-color: #fff;
-  min-width: 500px;
-  padding: 2rem;
-  min-height: 300px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 
   form {
     display: flex;
@@ -126,7 +127,6 @@
     width: 100%;
     height: 100vh;
     min-width: 100%;
-    border-radius: 5px;
 
     form {
       height: 85%;
